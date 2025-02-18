@@ -1,0 +1,93 @@
+﻿[
+  {
+    "Email": "generalmanager@singenuity.com",
+    "FirstName": "General",
+    "LastName": "Manager"
+  },
+  {
+    "Email": "manager@singenuity.com",
+    "FirstName": "Manager",
+    "LastName": "QA"
+  },
+  {
+    "Email": "supervisor@singenuity.com",
+    "FirstName": "Supervisor",
+    "LastName": "QA"
+  },
+  {
+    "Email": "viewonly@singenuity.com",
+    "FirstName": "View",
+    "LastName": "Only"
+  },
+  {
+    "Email": "guide@singenuity.com",
+    "FirstName": "Guide",
+    "LastName": "QA"
+  },
+  {
+    "Email": "frontdesk@singenuity.com",
+    "FirstName": "Front",
+    "LastName": "Desk"
+  },
+  {
+    "Email": "admin@singenuity.com",
+    "FirstName": "Admin",
+    "LastName": "QA"
+  },
+  {
+    "Email": "grady@singenuity.com",
+    "FirstName": "Grady",
+    "LastName": "Dycus"
+  },
+  {
+    "Email": "phil@singenuity.com",
+    "FirstName": "Phil",
+    "LastName": "Rhodes"
+  },
+  {
+    "Email": "ben@singenuity.com",
+    "FirstName": "Ben",
+    "LastName": "Stringer"
+  },
+  {
+    "Email": "reese@singenuity.com",
+    "FirstName": "Reese",
+    "LastName": "Peltier"
+  },
+  {
+    "Email": "maggie@singenuity.com",
+    "FirstName": "Maggie",
+    "LastName": "Greene"
+  },
+  {
+    "Email": "caleb@singenuity.com",
+    "FirstName": "Caleb",
+    "LastName": "Jones"
+  },
+  {
+    "Email": "michael@singenuity.com",
+    "FirstName": "Michael",
+    "LastName": "Milom"
+  },
+  {
+    "Email": "david@singenuity.com",
+    "FirstName": "David",
+    "LastName": "Watt"
+  },
+  {
+    "Email": "angel@singenuity.com",
+    "FirstName": "Angel",
+    "LastName": "Figueroa"
+  },
+  {
+    "Email": "melissa@singenuity.com",
+    "FirstName": "Melissa",
+    "LastName": "McLaughlin"
+  },
+  {
+    "Email": "scott@singenuity.com",
+    "FirstName": "Scott",
+    "LastName": "Keyes"
+
+  }
+]

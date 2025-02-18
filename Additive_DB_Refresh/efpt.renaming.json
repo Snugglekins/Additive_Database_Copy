@@ -1,0 +1,86 @@
+﻿[
+   {
+      "SchemaName": "Audit",
+      "TablePatternReplaceWith": "Audit_$0",
+      "TableRegexPattern": "^.+$",
+      "UseSchemaName": false
+   },
+   {
+      "SchemaName": "avail",
+      "TablePatternReplaceWith": "avail_$0",
+      "TableRegexPattern": "^.+$",
+      "UseSchemaName": false
+   },
+   {
+      "SchemaName": "CashDrawer",
+      "TablePatternReplaceWith": "CashDrawer_$0",
+      "TableRegexPattern": "^.+$",
+      "UseSchemaName": false
+   },
+   {
+      "SchemaName": "dbo",
+      "TablePatternReplaceWith": "$0",
+      "TableRegexPattern": "^.+$",
+      "UseSchemaName": false
+   },
+   {
+      "SchemaName": "History",
+      "TablePatternReplaceWith": "History_$0",
+      "TableRegexPattern": "^.+$",
+      "UseSchemaName": false
+   },
+   {
+      "SchemaName": "inntopia",
+      "TablePatternReplaceWith": "inntopia_$0",
+      "TableRegexPattern": "^.+$",
+      "UseSchemaName": false
+   },
+   {
+      "SchemaName": "Logging",
+      "TablePatternReplaceWith": "Logging_$0",
+      "TableRegexPattern": "^.+$",
+      "UseSchemaName": false
+   },
+   {
+      "SchemaName": "Merchandise",
+      "TablePatternReplaceWith": "Merchandise_$0",
+      "TableRegexPattern": "^.+$",
+      "UseSchemaName": false
+   },
+   {
+      "SchemaName": "NotificationSystem",
+      "TablePatternReplaceWith": "NotificationSystem_$0",
+      "TableRegexPattern": "^.+$",
+      "UseSchemaName": false
+   },
+   {
+      "SchemaName": "PhotoApp",
+      "TablePatternReplaceWith": "PhotoApp_$0",
+      "TableRegexPattern": "^.+$",
+      "UseSchemaName": false
+   },
+   {
+      "SchemaName": "remediate",
+      "TablePatternReplaceWith": "remediate_$0",
+      "TableRegexPattern": "^.+$",
+      "UseSchemaName": false
+   },
+   {
+      "SchemaName": "Square",
+      "TablePatternReplaceWith": "Square_$0",
+      "TableRegexPattern": "^.+$",
+      "UseSchemaName": false
+   },
+   {
+      "SchemaName": "System",
+      "TablePatternReplaceWith": "System_$0",
+      "TableRegexPattern": "^.+$",
+      "UseSchemaName": false
+   },
+   {
+      "SchemaName": "Ticketing",
+      "TablePatternReplaceWith": "Ticketing_$0",
+      "TableRegexPattern": "^.+$",
+      "UseSchemaName": false
+   }
+]

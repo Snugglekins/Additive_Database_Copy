@@ -1,0 +1,1005 @@
+﻿{
+   "CodeGenerationMode": 5,
+   "ContextClassName": "RefreshProcessContext",
+   "ContextNamespace": null,
+   "FilterSchemas": false,
+   "IncludeConnectionString": false,
+   "ModelNamespace": null,
+   "OutputContextPath": "Contexts",
+   "OutputPath": "Models",
+   "PreserveCasingWithRegex": true,
+   "ProjectRootNamespace": "Additive_DB_Refresh",
+   "Schemas": null,
+   "SelectedHandlebarsLanguage": 2,
+   "SelectedToBeGenerated": 0,
+   "T4TemplatePath": null,
+   "Tables": [
+      {
+         "Name": "[avail].[ScheduleDays]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[avail].[ScheduleRateResources]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[avail].[ScheduleRates]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[avail].[ScheduleTimeResources]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[avail].[ScheduleTimes]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[CashDrawer].[EventTypes]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[CashDrawer].[Sessions]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[AddressTypes]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[ApiUsers]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[ApplicationObjects]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[ApplicationObjectTypes]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[AppointmentTypes]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[BookingAgentBilling]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[BookingAgentCardOnFileRequests]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[BookingAgentCardsOnFile]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[BookingAgentCommissions]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[BookingAgentCrossSellEvents]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[BookingAgentEntityHierarchy]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[BookingAgentEntityHierarchyOptions]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[BookingAgentEntityHierarchyOptionTimes]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[BookingAgentEntityHierarchyRates]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[BookingAgentPackages]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[BookingAgents]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[BookingAgentTimes]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[BookingAgentTypes]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[BookingClientAgentMapping]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Cameras]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[CapacityTypes]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[CardTypes]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[ClientAgents]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[ClientEmployees]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[ClientLocationAddOns]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[ClientLocationAddOnsEntityHierarchy]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[ClientLocationAddresses]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[ClientLocationConversionTracking]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[ClientLocationCustomFieldResponses]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[ClientLocationCustomFields]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[ClientLocationCustomFormAssociations]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[ClientLocationCustomForms]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[ClientLocationDaysOfTheWeek]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[ClientLocationDevices]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[ClientLocationDiscountMultiplePromoCodes]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[ClientLocationDiscounts]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[ClientLocationDiscountTimes]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[ClientLocationEmailTemplates]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[ClientLocationEntities]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[ClientLocationEntityHierarchyDiscountRates]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[ClientLocationEntityHierarchyDiscounts]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[ClientLocationEntityPickupRoutes]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[ClientLocationEntityScheduleBookingAgentRates]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[ClientLocationEntityScheduleBookingAgents]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[ClientLocationEntityScheduleHours]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[ClientLocationEntityScheduleRates]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[ClientLocationEntityScheduleResources]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[ClientLocationEntitySchedules]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[ClientLocationHeardAboutUs]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[ClientLocationItemDirectories]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[ClientLocationLanguages]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[ClientLocationLoginRoles]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[ClientLocationLogins]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[ClientLocationOtherPaymentTypes]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[ClientLocationPaymentReasons]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[ClientLocationProcessingFeeHistory]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[ClientLocationProcessingFees]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[ClientLocationProductDiscounts]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[ClientLocationRefundReasons]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[ClientLocationResourceItems]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[ClientLocationResources]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[ClientLocationRoleApplicationObjects]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[ClientLocationRoles]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[ClientLocationRolesEntityHierarchy]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[ClientLocations]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[ClientLocationScheduleDayBookingAgentRates]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[ClientLocationScheduleDayBookingAgents]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[ClientLocationScheduleDaysEnum]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[ClientLocationScheduleLimitations]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[ClientLocationScheduleTimeBookingAgents]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[ClientLocationScheduleTimeDayBookingAgentRateEnum]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[ClientLocationScheduleTimeDayBookingAgentRates]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[ClientLocationScheduleTimeDayBookingAgents]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[ClientLocationScheduleTimeDayNotes]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[ClientLocationScheduleTimeDayOptionRates]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[ClientLocationScheduleTimeDayOptions]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[ClientLocationScheduleTimeDayPickupRoutes]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[ClientLocationScheduleTimeDayRateResources]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[ClientLocationScheduleTimeDayRates]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[ClientLocationScheduleTimeDayResources]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[ClientLocationScheduleTimeDays]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[ClientLocationScheduleTimes]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[ClientLocationScheduleWhens]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[ClientLocationTranslations]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[ClientLocationTransportation]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[ClientLocationWeather]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[ClientLogins]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[ClientMerchandise]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[ClientPaymentGateways]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[ClientRefundReasons]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Clients]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[CommissionTypes]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[ConsentFormHeadings]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[ConsentFormQuestions]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[ConsentForms]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[ConsentQuestionLanguages]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[ConsentQuestions]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Countries]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[CrossSellEventTypes]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Dates]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[DaylightSavingTimeWindows]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[DaysOfTheWeek]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[DeviceParings]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[DeviceTypes]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[DigitalWallets]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[DIN_ExperienceLevels]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[DIN_Heights]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[DIN_ShoeSizes]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[DIN_Weights]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[DirectionTypes]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[DiscountApplicationTypes]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[DiscountTypes]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[EmailTemplates]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[EmailTemplateSections]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[EntityHierarchy]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[EntityHierarchyChangeWindows]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[EntityHierarchyEmployees]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[EntityHierarchyInventory]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[EntityHierarchyOptionRates]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[EntityHierarchyOptions]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[EntityHierarchyRateResources]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[EntityHierarchyRates]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[EntityHierarchyTranslations]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[EntryModes]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[EventTypes]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[ExplicitDays]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[FeeAssociations]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[FeeClasses]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Fees]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[FeeTypes]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Genders]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[GiftCards]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[HolidayRules]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[ImportSources]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Languages]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[MessageTemplates]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[MessageTemplateTypes]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[OnlineTravelAgencies]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[OpeningTriggers]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[OrderStatus]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[OrganizationTypes]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[PackageDetailGroups]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[PackageDetailRates]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[PackageDetails]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[PackageGroups]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Packages]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[PackageTypes]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[PaymentGateways]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[PaymentMethodTypes]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[PaymentProcessors]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[PaymentTypes]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[PhoneTypes]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[PhotoPackages]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[PhotoPackageTypes]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[PhotoSystemTypes]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[PickupLocations]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[PickupOrderEventTypes]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[PickupRouteDays]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[PickupRouteEmployees]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[PickupRoutes]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[PickupRouteSchedules]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[PickupRouteScheduleTimeDays]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[PickupRouteScheduleTimes]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[PickupRouteStopDays]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[PickupRouteStops]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[PickupRouteVehicles]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[PickupStatus]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[PickupVehicles]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[ProcessingTypes]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[RateClasses]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[RefundMethodTypes]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[RefundTypes]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Registers]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[ResponseTypes]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[ScheduleTypes]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[ServiceLogs]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Services]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Sessions]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[States]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[SystemConfiguration]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[SystemEntityTypes]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[TransactionTypes]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[History].[BookingAgentCardsOnFile]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[History].[BookingAgentEntityHierarchyRates]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[History].[BookingAgentInvoices]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[History].[ClientLocationCustomFieldResponses]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[History].[ClientLocationCustomFields]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[History].[ClientLocationEntityHierarchyDiscountRates]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[History].[ClientLocationEntityHierarchyDiscounts]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[History].[ClientLocationEntityScheduleRates]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[History].[ClientLocationProductDiscounts]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[History].[DIN_ExperienceLevels]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[History].[DIN_Heights]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[History].[DIN_ShoeSizes]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[History].[DIN_Weights]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[History].[EntityHierarchyRates]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[History].[Products]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[History].[ProductVariablePrices]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[Merchandise].[Inventories]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[Merchandise].[InventoryChangeLog]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[Merchandise].[ProductAddOnEntityHierarchies]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[Merchandise].[ProductCategories]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[Merchandise].[ProductCategoryAssociations]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[Merchandise].[ProductColors]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[Merchandise].[ProductFlavors]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[Merchandise].[ProductRentalItemNotes]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[Merchandise].[ProductRentalItems]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[Merchandise].[Products]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[Merchandise].[ProductSizes]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[Merchandise].[ProductVariablePrices]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[Merchandise].[RentalNoteTypes]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[NotificationSystem].[NotificationDeliveryTypes]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[NotificationSystem].[NotificationTypes]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[remediate].[MessageQueueFixerConfiguration]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[remediate].[ProcessedOrders]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[remediate].[ProcessOrderResultTypes]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[Square].[CardBrandEnum]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[Square].[CurrencyCodes]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[Square].[EntryMethodEnum]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[Square].[SquareSDKTypes]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[Square].[StatusEnum]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[System].[ApplicationRoles]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[System].[ApplicationRolesApplicationObjects]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[System].[AppVersions]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[System].[Colors]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[System].[EmailTypes]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[System].[MessageTypes]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[System].[OrderStatusEnum]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[System].[ProcessingStatus]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[System].[spt_values]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[System].[TimeZones]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[System].[ZCTA]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[Ticketing].[TicketTypes]",
+         "ObjectType": 0
+      }
+   ],
+   "UiHint": null,
+   "UncountableWords": null,
+   "UseAsyncStoredProcedureCalls": true,
+   "UseBoolPropertiesWithoutDefaultSql": false,
+   "UseDatabaseNames": false,
+   "UseDatabaseNamesForRoutines": true,
+   "UseDateOnlyTimeOnly": true,
+   "UseDbContextSplitting": false,
+   "UseDecimalDataAnnotationForSprocResult": true,
+   "UseFluentApiOnly": false,
+   "UseHandleBars": false,
+   "UseHierarchyId": false,
+   "UseInflector": true,
+   "UseInternalAccessModifiersForSprocsAndFunctions": false,
+   "UseLegacyPluralizer": false,
+   "UseManyToManyEntity": false,
+   "UseNoDefaultConstructor": false,
+   "UseNoNavigations": false,
+   "UseNoObjectFilter": false,
+   "UseNodaTime": false,
+   "UseNullableReferences": false,
+   "UsePrefixNavigationNaming": false,
+   "UseSchemaFolders": false,
+   "UseSchemaNamespaces": false,
+   "UseSpatial": false,
+   "UseT4": false,
+   "UseT4Split": false
+}
