@@ -101,7 +101,7 @@ namespace Additive_DB_Refresh.Services
 
 				try
 				{
-					DatabaseCopier databaseCopier = await CopierFactory.CreateDatabaseCopier(config.DestinationDatabase);
+					DatabaseCopier databaseCopier = await CopierFactory.CreateDatabaseCopier(config);
 					await databaseCopier.CopyData(true);
 				}
 				catch (Exception e)

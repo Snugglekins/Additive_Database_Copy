@@ -10,7 +10,7 @@ namespace Additive_DB_Refresh
 	{
 		public string DestinationDatabase { get; set; } = String.Empty;
 		public List<int> ClientLocationKeys { get; set; } = new();
-		public bool? CopyPartnerLocations { get; set; };
+		public bool? CopyPartnerLocations { get; set; }
 		public string? UsersList { get; set; }
 		public bool? CopyLinkedOrders { get; set; }
 

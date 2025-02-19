@@ -1,4 +1,11 @@
-﻿using Azure.Identity;
+﻿using Additive_DB_Refresh;
+using Additive_DB_Refresh.DataStreams;
+using Additive_DB_Refresh.Logger;
+using Additive_DB_Refresh.Contexts;
+using Additive_DB_Refresh.Repositories;
+using Additive_DB_Refresh.Services;
+using Additive_DB_Refresh.Utilities;
+using Azure.Identity;
 using Azure.ResourceManager;
 using Azure.ResourceManager.Sql;
 using Azure.ResourceManager.Sql.Models;
@@ -6,22 +13,16 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Console;
 using Microsoft.Extensions.Configuration;
-using Additive_DB_Refresh.Utilities;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Data.SqlClient;
+using NetTopologySuite.Geometries.Implementation;
 using System;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Data.SqlClient;
-using Additive_DB_Refresh;
-using Additive_DB_Refresh.Logger;
-using Additive_DB_Refresh.Contexts;
-using Additive_DB_Refresh.Services;
 
-using Microsoft.EntityFrameworkCore;
-using Additive_DB_Refresh.Repositories;
 using Microsoft.EntityFrameworkCore.Internal;
-using Additive_DB_Refresh.DataStreams;
 
 
 //ModelPartials.bat $(ProjectDir) $(ProjectName)
@@ -68,14 +69,14 @@ builder.Services
 		.AddHostedService<DatabaseCopyService>()
 		.AddDbContextFactory<TargetContext>(options =>
 			{
-				options.UseSqlServer(targetConnectionString)
+				options.UseSqlServer(targetConnectionString, x=> x.UseHierarchyId().UseNetTopologySuite())
 					   .EnableSensitiveDataLogging();
 			}, ServiceLifetime.Scoped)
 		.AddDbContextFactory<SourceContext>(options =>
 			{
-				options.UseSqlServer(sourceConnectionString)
+				options.UseSqlServer(sourceConnectionString, x => x.UseHierarchyId().UseNetTopologySuite())
 					   .EnableSensitiveDataLogging();
-			} ,ServiceLifetime.Scoped
+			}, ServiceLifetime.Scoped
 			)
 		.AddSingleton(loggerFactory)
 		.AddSingleton(armClient)
@@ -85,7 +86,8 @@ builder.Services
 		.AddScoped<SystemTablesStream>()
 		.AddScoped<ClientStream>()
 		.AddScoped<ClientLocationStream>()
-		.AddSingleton<List<DbCopyConfig>>(dbCopyConfigs);
+		.AddSingleton<List<DbCopyConfig>>(dbCopyConfigs)
+		.AddSingleton<DatabaseCopierFactory>();
 
 builder.Services.AddSingleton<IConfiguration>(config);
 

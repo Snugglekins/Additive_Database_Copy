@@ -10,6 +10,7 @@ namespace Additive_DB_Refresh.Models;
 
 [Table("Products", Schema = "Merchandise")]
 [Index("ClientKey", "ClientLocationKey", "DateDeleted", Name = "ix2Merchandise_Products")]
+[Index("DateDeleted", "IsActive", "ProductHierarchy", Name = "nci_wi_Products_F501CFB49932BE686C71D612B42B016B")]
 public partial class Merchandise_Product
 {
     [Key]
@@ -46,6 +47,8 @@ public partial class Merchandise_Product
 
     [Column(TypeName = "money")]
     public decimal? MinimumPrice { get; set; }
+
+    public HierarchyId ProductHierarchy { get; set; }
 
     public bool? IsTopLevel { get; set; }
 

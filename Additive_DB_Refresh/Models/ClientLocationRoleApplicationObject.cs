@@ -15,6 +15,9 @@ public partial class ClientLocationRoleApplicationObject
 
     public long ClientLocationRoleKey { get; set; }
 
+    [Required]
+    public HierarchyId ObjectHierarchyKey { get; set; }
+
     public bool ReadOnly { get; set; }
 
     public int ApplicationObjectKey { get; set; }

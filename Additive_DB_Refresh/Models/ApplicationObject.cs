@@ -8,8 +8,14 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Additive_DB_Refresh.Models;
 
+[Index("ApplicationObjectKey", "ParentObjectHierarchyKey", Name = "ix1ApplicationObjects")]
+[Index("ParentObjectHierarchyKey", Name = "ix2ApplicationObjects")]
+[Index("ParentObjectHierarchyKey", "ObjectHierarchyKey", "ApplicationObjectKey", Name = "ix4ApplicationObjects")]
 public partial class ApplicationObject
 {
+    [Required]
+    public HierarchyId ObjectHierarchyKey { get; set; }
+
     [Required]
     [StringLength(50)]
     [Unicode(false)]
@@ -22,6 +28,8 @@ public partial class ApplicationObject
 
     [Column("URL")]
     public string Url { get; set; }
+
+    public HierarchyId ParentObjectHierarchyKey { get; set; }
 
     [ForeignKey("ApplicationObjectTypeKey")]
     [InverseProperty("ApplicationObjects")]

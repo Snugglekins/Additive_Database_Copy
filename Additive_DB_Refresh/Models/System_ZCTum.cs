@@ -5,10 +5,12 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.EntityFrameworkCore;
+using NetTopologySuite.Geometries;
 
 namespace Additive_DB_Refresh.Models;
 
 [Table("ZCTA", Schema = "System")]
+[Index("ZipcodeBuffer", Name = "ix1vwZCTA")]
 public partial class System_ZCTum
 {
     [Key]
@@ -40,4 +42,7 @@ public partial class System_ZCTum
 
     [Column("INTPLONG", TypeName = "numeric(20, 5)")]
     public decimal Intplong { get; set; }
+
+    [Column("ZIPCodeBuffer")]
+    public Geometry ZipcodeBuffer { get; set; }
 }

@@ -510,6 +510,10 @@ public partial class RefreshProcessContext : DbContext
         {
             entity.HasKey(e => e.ApplicationObjectKey).IsClustered(false);
 
+            entity.HasIndex(e => e.ObjectHierarchyKey, "ix3ApplicationObjects").IsClustered();
+
+            entity.Property(e => e.ParentObjectHierarchyKey).HasComputedColumnSql("([ObjectHierarchyKey].[GetAncestor]((1)))", true);
+
             entity.HasOne(d => d.ApplicationObjectTypeKeyNavigation).WithMany(p => p.ApplicationObjects)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_ApplicationObjects_ApplicationObjectTypes");
@@ -2521,6 +2525,8 @@ public partial class RefreshProcessContext : DbContext
                     tb.HasTrigger("trd_Merchandise_Products");
                     tb.HasTrigger("trui_Merchandise_Products");
                 });
+
+            entity.HasIndex(e => new { e.ProductHierarchy, e.IsActive, e.DateDeleted, e.ProductName }, "ix1Merchandise.Products").HasFillFactor(80);
 
             entity.Property(e => e.ParentProductKey).HasComputedColumnSql("(case when [IsSimpleProduct]=(1) then NULL when [Products].[DateDeleted] IS NOT NULL then NULL when [ProductHierarchy].[GetLevel]()=(2) then NULL else replace(replace([ProductHierarchy].[GetAncestor]((1)).ToString(),('/'+CONVERT([varchar](12),[ClientLocationKey],(0)))+'/',''),'/','') end)", true);
             entity.Property(e => e.RowAdded).HasDefaultValueSql("(getutcdate())");

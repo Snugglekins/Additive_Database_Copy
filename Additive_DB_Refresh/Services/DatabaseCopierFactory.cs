@@ -21,12 +21,13 @@ namespace Additive_DB_Refresh.Services
 			TargetFactory = targetFactory;
 			LoggerFactory = loggerFactory;
 		}
-		public async Task<DatabaseCopier> CreateDatabaseCopier(string targetdatabase) {
+		public async Task<DatabaseCopier> CreateDatabaseCopier(DbCopyConfig copyConfig) {
+			string targetdatabase = copyConfig.DestinationDatabase;
 			TargetContext target = await TargetFactory.CreateDbContextAsync(targetdatabase);
 			SystemTablesStream systemTablesStream = new SystemTablesStream(SourceFactory.CreateDbContext(), await TargetFactory.CreateDbContextAsync(targetdatabase),LoggerFactory.CreateLogger<SystemTablesStream>());
 			ClientStream clientStream = new ClientStream(SourceFactory.CreateDbContext(), await TargetFactory.CreateDbContextAsync(targetdatabase), LoggerFactory.CreateLogger<ClientStream>());
 			ClientLocationStream clientLocationStream = new ClientLocationStream(SourceFactory, TargetFactory, LoggerFactory.CreateLogger<ClientLocationStream>(), targetdatabase);
-			DatabaseCopier databaseCopier = new DatabaseCopier(systemTablesStream,clientStream,clientLocationStream,LoggerFactory.CreateLogger<DatabaseCopier>(), await TargetFactory.CreateDbContextAsync(targetdatabase), SourceFactory.CreateDbContext());
+			DatabaseCopier databaseCopier = new DatabaseCopier(systemTablesStream,clientStream,clientLocationStream,LoggerFactory.CreateLogger<DatabaseCopier>(), await TargetFactory.CreateDbContextAsync(targetdatabase), SourceFactory.CreateDbContext(), copyConfig);
 			return databaseCopier;
 		}
 

@@ -13,6 +13,9 @@ public partial class SystemEntityType
     [Key]
     public short SystemEntityTypeKey { get; set; }
 
+    [Column("SystemEntityHierarchyID")]
+    public HierarchyId SystemEntityHierarchyId { get; set; }
+
     [StringLength(250)]
     public string Name { get; set; }
 

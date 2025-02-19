@@ -9,10 +9,15 @@ using Microsoft.EntityFrameworkCore;
 namespace Additive_DB_Refresh.Models;
 
 [Table("EntityHierarchy")]
+[Index("EntityHierarchyId", Name = "ix2EntityHierarchy")]
 public partial class EntityHierarchy
 {
     [Key]
     public long EntityHierarchyKey { get; set; }
+
+    [Required]
+    [Column("EntityHierarchyID")]
+    public HierarchyId EntityHierarchyId { get; set; }
 
     public long? DefaultEntityHierarchyKey { get; set; }
 

@@ -41,6 +41,8 @@ public partial class History_Product
     [Column(TypeName = "money")]
     public decimal? MinimumPrice { get; set; }
 
+    public HierarchyId ProductHierarchy { get; set; }
+
     public long? ProductColorKey { get; set; }
 
     public short? ProductSizeKey { get; set; }

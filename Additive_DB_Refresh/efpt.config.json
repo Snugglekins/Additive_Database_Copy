@@ -986,7 +986,7 @@
    "UseDecimalDataAnnotationForSprocResult": true,
    "UseFluentApiOnly": false,
    "UseHandleBars": false,
-   "UseHierarchyId": false,
+   "UseHierarchyId": true,
    "UseInflector": true,
    "UseInternalAccessModifiersForSprocsAndFunctions": false,
    "UseLegacyPluralizer": false,
@@ -999,7 +999,7 @@
    "UsePrefixNavigationNaming": false,
    "UseSchemaFolders": false,
    "UseSchemaNamespaces": false,
-   "UseSpatial": false,
+   "UseSpatial": true,
    "UseT4": false,
    "UseT4Split": false
 }

@@ -19,6 +19,8 @@ public partial class Merchandise_ProductCategory
     [Unicode(false)]
     public string Description { get; set; }
 
+    public HierarchyId ProductCategoryHierarchy { get; set; }
+
     public int? ClientKey { get; set; }
 
     public int? ClientLocationKey { get; set; }

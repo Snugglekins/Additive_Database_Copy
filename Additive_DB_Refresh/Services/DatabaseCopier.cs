@@ -23,22 +23,26 @@ namespace Additive_DB_Refresh.Services
 		List<int> ClientLocationKeys { get; set; } = new List<int>();
 		private bool CopyPartnerLocations = false;
 		DbCopyConfig CopyConfig { get; set; }
-		public DatabaseCopier(SystemTablesStream systemTablesStream,ClientStream clientStream, ClientLocationStream clientLocationStream, ILogger<DatabaseCopier> logger, TargetContext target,SourceContext source) {
+		public DatabaseCopier(SystemTablesStream systemTablesStream,ClientStream clientStream, ClientLocationStream clientLocationStream, ILogger<DatabaseCopier> logger, TargetContext target,SourceContext source, DbCopyConfig copyConfig) {
 			SystemTablesStream = systemTablesStream;
 			ClientStream = clientStream;
 			ClientLocationStream = clientLocationStream;
 			Logger = logger;
 			Target = target;
 			Source = source;
+			CopyConfig = copyConfig;
 		}
 		public async Task CopyData(bool clearTables) { 
 
 			await PrepareForImportAsync(clearTables);
 
 			ClientLocationKeys = CopyConfig.ClientLocationKeys;
+
 			if (CopyPartnerLocations) {
 				ClientLocationKeys = await GetCrossSellPartners(ClientLocationKeys);
 			}
+
+			await SystemTablesStream.CopySystemTablesAsync();
 
 			foreach (int clientLocationKey in ClientLocationKeys) { 
 				await CopyClientLocationAsync(clientLocationKey);

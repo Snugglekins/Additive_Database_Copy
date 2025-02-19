@@ -2,10 +2,7 @@
   "DbCopyConfigs": [
     {
       "DestinationDatabase": "Additive_Refresh_Test",
-      "ClientLocationKeys": [
-        { "ClientLocationKey": 1 },
-        { "ClientLocationKey": 3 }
-      ]
+      "ClientLocationKeys": [8]
     }
   ],
   "DefaultValues": {
