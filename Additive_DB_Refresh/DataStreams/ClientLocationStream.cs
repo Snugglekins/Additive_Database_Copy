@@ -18,16 +18,16 @@ namespace Additive_DB_Refresh.DataStreams
 {
 	public class ClientLocationStream : IDisposable
 	{
-		private ILogger logger;
+		private ILogger Logger;
 		IDbContextFactory<SourceContext> sourceFactory;
 		IDbContextFactory<TargetContext> targetFactory;
 		private SourceContext source { get; set; }
 		private TargetContext target { get; set; }
 
 		private string TargetDatabaseName;
-		public ClientLocationStream(IDbContextFactory<SourceContext> _sourceFactory, IDbContextFactory<TargetContext> _targetFactory, ILogger<ClientLocationStream> _logger, string targetDatabase)
+		public ClientLocationStream(IDbContextFactory<SourceContext> _sourceFactory, IDbContextFactory<TargetContext> _targetFactory, ILogger<ClientLocationStream> logger, string targetDatabase)
 		{
-			logger = _logger;
+			Logger = logger;
 			sourceFactory = _sourceFactory;
 			targetFactory = _targetFactory;
 			TargetDatabaseName = targetDatabase;
@@ -35,20 +35,22 @@ namespace Additive_DB_Refresh.DataStreams
 		}
 		public async Task CopyClientLocationAsync(int clientLocationKey)
 		{
-
+			Logger.LogInformation("Copying Client Location {0}", clientLocationKey);
 			source = await sourceFactory.CreateDbContextNoTimeoutAsync();
 			target = await targetFactory.CreateDbContextAsync(TargetDatabaseName);
 
 			await target.InsertUpdateAsync(GetClientLocation(clientLocationKey));
 
 			#region Load Security
+			Logger.LogInformation("Copying Client Location {0} Security", clientLocationKey);
 			await target.InsertUpdateAsync(GetClientLocationRoles(clientLocationKey));
 			await target.InsertUpdateAsync(GetClientLocationRoleApplicationObjects(clientLocationKey));
 			await target.InsertUpdateAsync(GetClientLocationLogins(clientLocationKey));
 			await target.InsertUpdateAsync(GetClientLocationLoginRoles(clientLocationKey));
-			
+
 			#endregion Load Security
 			#region Load Activities
+			Logger.LogInformation("Copying Client Location {0} Activities", clientLocationKey);
 			source = await sourceFactory.CreateDbContextNoTimeoutAsync();
 			target = await targetFactory.CreateDbContextAsync(TargetDatabaseName);
 
@@ -64,18 +66,16 @@ namespace Additive_DB_Refresh.DataStreams
 			await target.InsertUpdateAsync(GetEntityHierarchyOptionRates(clientLocationKey));
 			await target.InsertUpdateAsync(GetClientLocationEntitySchedules(clientLocationKey));
 			await target.InsertUpdateAsync(GetClientLocationScheduleTimes(clientLocationKey));
-			await target.InsertUpdateAsync(GetClientLocationScheduleTimeDays(clientLocationKey));
-			await target.InsertUpdateAsync(GetClientLocationScheduleTimeDayRates(clientLocationKey));
+			await target.InsertUpdateAsync(GetClientLocationScheduleTimeDays(clientLocationKey),10000);
+			await target.InsertUpdateAsync(GetClientLocationScheduleTimeDayRates(clientLocationKey), 10000);
 			await target.InsertUpdateAsync(GetClientLocationEntityScheduleHours(clientLocationKey));
 			await target.InsertUpdateAsync(GetClientLocationEntityScheduleRates(clientLocationKey));
 			await target.InsertUpdateAsync(GetClientLocationEntityScheduleResources(clientLocationKey));
-			await target.InsertUpdateAsync(GetClientLocationScheduleTimeBookingAgents(clientLocationKey));
-			await target.InsertUpdateAsync(GetClientLocationScheduleDayBookingAgentRates(clientLocationKey));
-			await target.InsertUpdateAsync(GetClientLocationScheduleDaysEnums(clientLocationKey));
-			await target.InsertUpdateAsync(GetClientLocationScheduleTimeDayBookingAgentRateEnums(clientLocationKey));
+			await target.InsertUpdateAsync(GetClientLocationScheduleDaysEnums(clientLocationKey), 10000);
 
 			#endregion Load Activities
 			#region Load Merchandise
+			Logger.LogInformation("Copying Client Location {0} Merchandise", clientLocationKey);
 			source = await sourceFactory.CreateDbContextNoTimeoutAsync();
 			target = await targetFactory.CreateDbContextAsync(TargetDatabaseName);
 
@@ -90,6 +90,7 @@ namespace Additive_DB_Refresh.DataStreams
 			await target.InsertUpdateAsync(GetHistory_ProductVariablePrices(clientLocationKey));
 			await target.InsertAsync(GetMerchandise_InventoryChangeLog(clientLocationKey), 10000);
 			#endregion Load Merchandise
+			Logger.LogInformation("Copying Client Location {0} Photo Packages, Cash Drawer, Communication", clientLocationKey);
 			#region Load PhotoPackages
 			await target.InsertUpdateAsync(GetPhotoPackages(clientLocationKey));
 			#endregion Load PhototPackages
@@ -100,14 +101,26 @@ namespace Additive_DB_Refresh.DataStreams
 			await target.InsertUpdateAsync(GetEmailTemplates(clientLocationKey));
 			await target.InsertUpdateAsync(GetEmailTemplateSections(clientLocationKey));
 			#endregion Load Communication
+			#region BookingAgents
+			Logger.LogInformation("Copying Client Location {0} Booking Agents", clientLocationKey);
+			await target.InsertUpdateAsync(GetClientLocationEntityScheduleBookingAgents(clientLocationKey));
+			await target.InsertUpdateAsync(GetClientLocationEntityScheduleBookingAgentRates(clientLocationKey));
+			await target.InsertUpdateAsync(GetClientLocationScheduleTimeBookingAgents(clientLocationKey));
+			await target.InsertUpdateAsync(GetClientLocationScheduleDayBookingAgentRates(clientLocationKey));
+			await target.InsertUpdateAsync(GetClientLocationScheduleTimeDayBookingAgentRateEnums(clientLocationKey), 10000);
+			#endregion BookingAgents
 			#region Load Consent Forms
+			Logger.LogInformation("Copying Client Location {0} Consent Forms", clientLocationKey);
 			await target.InsertUpdateAsync(GetConsentForms(clientLocationKey));
-			await target.InsertUpdateAsync(GetConsentFormHeadings(clientLocationKey));
+			//Consent Form Headings has no primary key defined
+			await target.BulkInsertAsync(GetConsentFormHeadings(clientLocationKey));
 			await target.InsertUpdateAsync(GetConsentFormQuestions(clientLocationKey));
 			await target.InsertUpdateAsync(GetConsentQuestions(clientLocationKey));
-			await target.InsertUpdateAsync(GetConsentQuestionLanguages(clientLocationKey));
+			//Consent Question Languages has no primary key defined
+			await target.BulkInsertAsync(GetConsentQuestionLanguages(clientLocationKey));
 			#endregion Load Consent Forms
 			#region Load Custom Forms
+			Logger.LogInformation("Copying Client Location {0} Custom Forms", clientLocationKey);
 			source = await sourceFactory.CreateDbContextNoTimeoutAsync();
 			target = await targetFactory.CreateDbContextAsync(TargetDatabaseName);
 			await target.InsertUpdateAsync(GetDIN_ExperienceLevelsQueryable(clientLocationKey));
@@ -116,17 +129,21 @@ namespace Additive_DB_Refresh.DataStreams
 			await target.InsertUpdateAsync(GetDIN_WeightsQueryable(clientLocationKey));
 			#endregion Load Custom Forms
 			#region Load Fees
+			Logger.LogInformation("Copying Client Location {0} Fees", clientLocationKey);
 			await target.InsertUpdateAsync(GetFees(clientLocationKey));
 			await target.InsertUpdateAsync(GetFeeAssociations(clientLocationKey));
 			#endregion Load Fees
 			#region Load Misc
+			Logger.LogInformation("Copying Client Location {0} Misc", clientLocationKey);
 			await target.InsertUpdateAsync(GetClientLocationHeardAboutUs(clientLocationKey));
 			await target.InsertUpdateAsync(GetClientLocationOtherPaymentTypes(clientLocationKey));
 			await target.InsertUpdateAsync(GetClientLocationWeathers(clientLocationKey));
 			await target.InsertUpdateAsync(GetDaylightSavingTimeWindows(clientLocationKey));
 			await target.InsertUpdateAsync(GetExplicitDays(clientLocationKey));
+			await target.InsertUpdateAsync(GetOrganizationTypes(clientLocationKey));
 			#endregion Load Misc
 			#region Load Packages
+			Logger.LogInformation("Copying Client Location {0} Packages", clientLocationKey);
 			await target.InsertUpdateAsync(GetPackages(clientLocationKey));
 			await target.InsertUpdateAsync(GetPackageDetails(clientLocationKey));
 			await target.InsertUpdateAsync(GetPackageDetailRates(clientLocationKey));
@@ -134,6 +151,7 @@ namespace Additive_DB_Refresh.DataStreams
 			await target.InsertUpdateAsync(GetPackageDetailGroups(clientLocationKey));
 			#endregion Load Packages
 			#region Load PickupRoutes
+			Logger.LogInformation("Copying Client Location {0} Pickup Routes", clientLocationKey);
 			await target.InsertUpdateAsync(GetPickupRoutes(clientLocationKey));
 			await target.InsertUpdateAsync(GetPickupRouteDays(clientLocationKey));
 			await target.InsertUpdateAsync(GetPickupRouteEmployees(clientLocationKey));
@@ -144,6 +162,7 @@ namespace Additive_DB_Refresh.DataStreams
 			await target.InsertUpdateAsync(GetPickupRouteStopDays(clientLocationKey));
 			await target.InsertUpdateAsync(GetPickupRouteVehicles(clientLocationKey));
 			await target.InsertUpdateAsync(GetPickupVehicles(clientLocationKey));
+			await target.InsertUpdateAsync(GetPickupLocations(clientLocationKey));
 			#endregion Load PickupRoutes
 
 		}
@@ -288,28 +307,11 @@ namespace Additive_DB_Refresh.DataStreams
 				   where cles.ClientLocationKey == clientLocationKey
 				   select clesr;
 		}
-		private IQueryable<ClientLocationScheduleTimeBookingAgent> GetClientLocationScheduleTimeBookingAgents(int clientLocationKey) {
-			return from cles in source.ClientLocationEntitySchedules
-				   join clst in source.ClientLocationScheduleTimes
-						on cles.ClientLocationEntityScheduleKey equals clst.ClientLocationEntityScheduleKey
-					join clstba in source.ClientLocationScheduleTimeBookingAgents
-						on clst.ClientLocationScheduleTimeKey equals clstba.ClientLocationScheduleTimeKey
-				select clstba;
-		}
-		private IQueryable<ClientLocationScheduleDayBookingAgentRate> GetClientLocationScheduleDayBookingAgentRates(int clientLocationKey)
-		{
-			return from cles in source.ClientLocationEntitySchedules
-				   join clstbar in source.ClientLocationScheduleDayBookingAgentRates
-						on cles.ClientLocationEntityScheduleKey equals clstbar.ClientLocationEntityScheduleKey
-				where cles.ClientLocationKey == clientLocationKey
-				   select clstbar;
-		}
+
 		private IQueryable<ClientLocationScheduleDaysEnum> GetClientLocationScheduleDaysEnums(int clientLocationKey) { 
 			return source.ClientLocationScheduleDaysEnums.Where(e => e.ClientLocationKey == clientLocationKey);
 		}
-		private IQueryable<ClientLocationScheduleTimeDayBookingAgentRateEnum> GetClientLocationScheduleTimeDayBookingAgentRateEnums(int clientLocationKey) { 
-			return source.ClientLocationScheduleTimeDayBookingAgentRateEnums.Where(c => c.ClientLocationKey ==clientLocationKey);
-		}
+
 		#endregion Activites Queryable
 		#region Merchandise Queryable
 		private IQueryable<Merchandise_Product> GetMerchandise_Products(int clientLocationKey)
@@ -393,6 +395,48 @@ namespace Additive_DB_Refresh.DataStreams
 		}
 
 		#endregion Communication Queryable
+		#region BookingAgents Queryable
+		private IQueryable<ClientLocationEntityScheduleBookingAgent> GetClientLocationEntityScheduleBookingAgents(int clientLocationKey)
+		{
+			return from cles in source.ClientLocationEntitySchedules
+				   join clesba in source.ClientLocationEntityScheduleBookingAgents
+						on cles.ClientLocationEntityScheduleKey equals clesba.ClientLocationEntityScheduleKey
+				   where cles.ClientLocationKey == clientLocationKey
+				   select clesba;
+		}
+		private IQueryable<ClientLocationEntityScheduleBookingAgentRate> GetClientLocationEntityScheduleBookingAgentRates(int clientLocationKey)
+		{
+			return from cles in source.ClientLocationEntitySchedules
+				   join clesba in source.ClientLocationEntityScheduleBookingAgents
+						on cles.ClientLocationEntityScheduleKey equals clesba.ClientLocationEntityScheduleKey
+				   join clesbar in source.ClientLocationEntityScheduleBookingAgentRates
+						on new { clesba.ClientLocationEntityScheduleKey, clesba.BookingAgentKey } equals new { clesbar.ClientLocationEntityScheduleKey, clesbar.BookingAgentKey }
+				   where cles.ClientLocationKey == clientLocationKey
+				   select clesbar;
+		}
+		private IQueryable<ClientLocationScheduleTimeBookingAgent> GetClientLocationScheduleTimeBookingAgents(int clientLocationKey)
+		{
+			return from cles in source.ClientLocationEntitySchedules
+				   join clst in source.ClientLocationScheduleTimes
+						on cles.ClientLocationEntityScheduleKey equals clst.ClientLocationEntityScheduleKey
+				   join clstba in source.ClientLocationScheduleTimeBookingAgents
+					   on clst.ClientLocationScheduleTimeKey equals clstba.ClientLocationScheduleTimeKey
+				   where cles.ClientLocationKey == clientLocationKey
+				   select clstba;
+		}
+		private IQueryable<ClientLocationScheduleDayBookingAgentRate> GetClientLocationScheduleDayBookingAgentRates(int clientLocationKey)
+		{
+			return from cles in source.ClientLocationEntitySchedules
+				   join clstbar in source.ClientLocationScheduleDayBookingAgentRates
+						on cles.ClientLocationEntityScheduleKey equals clstbar.ClientLocationEntityScheduleKey
+				   where cles.ClientLocationKey == clientLocationKey
+				   select clstbar;
+		}
+		private IQueryable<ClientLocationScheduleTimeDayBookingAgentRateEnum> GetClientLocationScheduleTimeDayBookingAgentRateEnums(int clientLocationKey)
+		{
+			return source.ClientLocationScheduleTimeDayBookingAgentRateEnums.Where(c => c.ClientLocationKey == clientLocationKey);
+		}
+		#endregion BookingAgents Queryable
 		#region Consent Forms Queryable
 		private IQueryable<ConsentForm> GetConsentForms(int clientLocationKey)
 		{
@@ -477,7 +521,9 @@ namespace Additive_DB_Refresh.DataStreams
 		private IQueryable<ExplicitDay> GetExplicitDays(int clientLocationKey) { 
 			return source.ExplicitDays.Where(e => e.ClientLocationKey == clientLocationKey);
 		}
-
+		private IQueryable<OrganizationType> GetOrganizationTypes(int clientLocationKey) { 
+			return source.OrganizationTypes.Where(o => o.ClientLocationKey == clientLocationKey);
+		}
 		#endregion Misc Queryable
 		#region Packages Queryables
 		private IQueryable<Package> GetPackages(int clientLocationKey) { 
@@ -586,6 +632,9 @@ namespace Additive_DB_Refresh.DataStreams
 		private IQueryable<PickupVehicle> GetPickupVehicles(int clientLocationKey) { 
 			return source.PickupVehicles.Where(v => v.ClientLocationKey == clientLocationKey);
 		}
+		private IQueryable<PickupLocation> GetPickupLocations(int clientLocationKey) {
+			return source.PickupLocations.Where(pl => pl.ClientLocationKey == clientLocationKey);
+		}
 		#endregion PickupRoutes Queryable
 		public void Dispose()
 		{
@@ -593,7 +642,6 @@ namespace Additive_DB_Refresh.DataStreams
 			{ source.Dispose(); }
 			if (target != null)
 			{ target.Dispose(); }
-
 		}
 	}
 }

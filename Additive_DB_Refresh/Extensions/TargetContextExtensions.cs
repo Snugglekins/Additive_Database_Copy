@@ -4,12 +4,14 @@ using Additive_DB_Refresh.Services;
 using EFCore.BulkExtensions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Net.NetworkInformation;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Text;
@@ -122,8 +124,20 @@ namespace Additive_DB_Refresh.Extensions
 			await Migrator<T>.BulkInsertData(target,source,iqueryable.ToQueryString());
 		}
 		#region Table Management
-		private static List<string> GetAllTableNames(this TargetContext target) {
+		public static List<string> GetAllTableNames(this TargetContext target) {
 			return target.Model.GetEntityTypes().Select(t => $"[{(t.GetSchema() ?? "dbo")}].[{t.GetTableName()}]").ToList();
+		}
+		public async static Task<List<string>> GetAllMissingTableNamesAsync(this TargetContext target) { 
+			List<string> dbTables =  await target.Database.SqlQueryRaw<string>("SELECT '['+ t.TABLE_SCHEMA +'].['+ t.TABLE_NAME +']' AS UserTables FROM INFORMATION_SCHEMA.TABLES AS t WHERE t.TABLE_TYPE LIKE 'BASE TABLE'").ToListAsync();
+			List<string> modelTables = target.GetAllTableNames();
+			List<string> missingTables = new List<string>();
+			foreach (var modelTable in modelTables) {
+				if (!dbTables.Any(t => t.Equals(modelTable))) 
+				{
+					missingTables.Add(modelTable);
+				}
+			}
+			return missingTables;
 		}
 		public static async Task ClearAndReseedAllTablesAsync(this TargetContext target) {
 			var tables = target.GetAllTableNames();
@@ -145,6 +159,17 @@ namespace Additive_DB_Refresh.Extensions
 		
 			}
 		}
+		public static async Task TruncateAllTablesAsync(this TargetContext target) {
+			var tables = target.GetAllTableNames();
+
+			foreach (var t in tables)
+			{
+			
+				string cmd = $"TRUNCATE TABLE {t}";
+				await target.Database.ExecuteSqlRawAsync(cmd);
+
+			}
+		}
 		#endregion Table Management		
 		#region SQL Script based operations
 		public static async Task TurnOffForeignKeysAsync(this TargetContext target)
@@ -154,6 +179,12 @@ namespace Additive_DB_Refresh.Extensions
 		public static async Task TurnOnForeignKeysAsync(this TargetContext target)
 		{
 			await RunSQLFileAsync(target, "ForeignKeys_TurnOn.sql");
+		}
+		public static async Task DropForeignKeysAsync(this TargetContext target) {
+			await RunSQLFileAsync(target, "ForeignKeys_Drop.sql");
+		}
+		public static async Task AddForeignKeysAsync(this TargetContext target) {
+			await RunSQLFileAsync(target, "ForeignKeys_Add.sql");
 		}
 		public static async Task DisableTriggersAsync(this TargetContext target)
 		{

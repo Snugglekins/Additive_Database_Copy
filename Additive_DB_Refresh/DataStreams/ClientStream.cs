@@ -15,25 +15,25 @@ namespace Additive_DB_Refresh.DataStreams
 	{
 		private SourceContext source;
 		private TargetContext target;
-		private ILogger<ClientStream> logger;
-		public ClientStream(SourceContext _source, TargetContext _target, ILogger<ClientStream> _logger) {
+		private ILogger<ClientStream> Logger;
+		public ClientStream(SourceContext _source, TargetContext _target, ILogger<ClientStream> logger) {
 			source = _source;
 			target = _target;
-			logger = _logger;
+			Logger = logger;
 			source.Database.SetCommandTimeout(0);
 			target.Database.SetCommandTimeout(0);
 		}
 		public async Task CopyClientAsync(int clientKey) {
 			try
 			{
-				logger.LogInformation($"Copying client {clientKey}");
+				Logger.LogInformation($"Copying client {clientKey}");
 				await Migrator<Client>.MigrateDataInsertUpdateAsync(GetClientIQueryable(source, clientKey), target);
 				await Migrator<ClientLogin>.MigrateDataInsertUpdateAsync(GetClientLoginsIQueryable(source, clientKey), target);
 				await Migrator<ClientEmployee>.MigrateDataInsertUpdateAsync(GetClientEmployeesIQueryable(source, clientKey), target);
-				logger.LogInformation($"Finished copying client {clientKey}");
+				Logger.LogInformation($"Finished copying client {clientKey}");
 			}
 			catch (Exception ex) {
-				logger.LogError(ex, "CopyClient");
+				Logger.LogError(ex, "CopyClient");
 			}
 		}
 		#region Client Queryables

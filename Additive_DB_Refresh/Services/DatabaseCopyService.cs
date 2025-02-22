@@ -31,7 +31,7 @@ namespace Additive_DB_Refresh.Services
 		private CancellationTokenSource cts { get; set; }
 		int? exitCode;
 		ArmClient armClient { get; }
-		private ILogger<DatabaseCopyService> logger { get; }
+		private ILogger<DatabaseCopyService> Logger { get; }
 		private SourceContext source { get; }
 		private TargetContext target { get; }
 		private DatabaseCopierFactory CopierFactory { get; }
@@ -46,7 +46,7 @@ namespace Additive_DB_Refresh.Services
 			appLifetime = _appLifetime;
 			cts = new CancellationTokenSource();
 			configuration = _configuration;
-			logger = _logger;
+			Logger = _logger;
 			armClient = _armClient;
 			dbConfigs = _dbConfigs;
 			CopierFactory = databaseCopierFactory;
@@ -54,7 +54,7 @@ namespace Additive_DB_Refresh.Services
 		}
 		public Task StartAsync(CancellationToken cancellationToken)
 		{
-			logger.LogDebug("Starting DatabaseCopyService");
+			Logger.LogDebug("Starting DatabaseCopyService");
 			appLifetime.ApplicationStarted.Register(() =>
 			{
 				try
@@ -69,7 +69,7 @@ namespace Additive_DB_Refresh.Services
 				catch (Exception ex)
 				{
 					exitCode = 1;
-					logger.LogError($"Unhandled exception during DatabaseCopyService : {ex.Message}");
+					Logger.LogError($"Unhandled exception during DatabaseCopyService : {ex.Message}");
 				}
 				finally
 				{
@@ -87,14 +87,14 @@ namespace Additive_DB_Refresh.Services
 		}
 		public Task StopAsync(CancellationToken cancellationToken)
 		{
-			logger.LogDebug("Stopping DatabaseCopyService");
+			Logger.LogDebug("Stopping DatabaseCopyService");
 			appLifetime.StopApplication();
 			return Task.CompletedTask;
 		}
 		public async Task RunAsync(CancellationToken cancellationToken)
 		{
 			var starttime = DateTime.Now;
-			logger.LogInformation($"Data transfer starting : {starttime}");
+			Logger.LogInformation($"Data transfer starting : {starttime}");
 			foreach (DbCopyConfig config in dbConfigs)
 			{
 				//TODO : Create method to generate DB copies from an empty original, then use those as targets for the copy process
@@ -102,17 +102,28 @@ namespace Additive_DB_Refresh.Services
 				try
 				{
 					DatabaseCopier databaseCopier = await CopierFactory.CreateDatabaseCopier(config);
-					await databaseCopier.CopyData(true);
+					List<string> missingTables = await databaseCopier.GetAllMissingTablesAsync();
+					if (missingTables != null & missingTables.Count > 0)
+					{
+						foreach (string missingTable in missingTables)
+						{
+							Logger.LogError($"Database missing table {missingTable}");
+						}
+					}
+					else
+					{
+						await databaseCopier.CopyData(true);
+					}
 				}
 				catch (Exception e)
 				{
-					logger.LogError(e.ToString());
+					Logger.LogError(e.ToString());
 					throw;
 				}
 				finally { 
 					var endtime = DateTime.Now;
 					TimeSpan ts = endtime - starttime;
-					logger.LogInformation($"Process completed at {endtime}  ; runtime {ts}");
+					Logger.LogInformation($"Process completed at {endtime}  ; runtime {ts}");
 				}
 			}
 		}

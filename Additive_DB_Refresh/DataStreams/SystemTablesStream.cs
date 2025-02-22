@@ -17,17 +17,17 @@ namespace Additive_DB_Refresh.DataStreams
 	{
 		private SourceContext source;
 		private TargetContext target;
-		private ILogger<SystemTablesStream> logger;
-		public SystemTablesStream(SourceContext _source, TargetContext _target, ILogger<SystemTablesStream> _logger) {
+		private ILogger<SystemTablesStream> Logger;
+		public SystemTablesStream(SourceContext _source, TargetContext _target, ILogger<SystemTablesStream> logger) {
 			source = _source;
 			target = _target;
-			logger = _logger;
+			Logger = logger;
 			source.Database.SetCommandTimeout(0);
 			target.Database.SetCommandTimeout(0);
 		}
 		public async Task CopySystemTablesAsync() {
 
-			logger.LogInformation("Begin copying system tables");
+			Logger.LogInformation("Begin copying system tables");
 
 
 			//await Migrator<CardType>.MigrateByteIdentity(source.CardTypes, target);
@@ -64,10 +64,10 @@ namespace Additive_DB_Refresh.DataStreams
 			await target.InsertUpdateAsync(source.OnlineTravelAgencies);
 			await target.InsertUpdateAsync(source.OpeningTriggers);
 			await target.InsertUpdateAsync(source.OrderStatuses);
-			await target.InsertUpdateAsync(source.OrganizationTypes);
 			await target.InsertUpdateAsync(source.PackageTypes);
 			await target.InsertUpdateAsync(source.PaymentGateways);
-			await target.InsertUpdateAsync(source.PaymentMethodTypes);
+			//PaymentMethodTypes has a key = 0 value for Other, cannot use InsertUpdateAsync
+			await target.BulkInsertAsync(source,source.PaymentMethodTypes);
 			await target.InsertUpdateAsync(source.PaymentProcessors);
 			await target.InsertUpdateAsync(source.PaymentTypes);
 			await target.InsertUpdateAsync(source.PhoneTypes);
@@ -96,16 +96,18 @@ namespace Additive_DB_Refresh.DataStreams
 			await target.InsertUpdateAsync(source.System_Colors);
 			await target.InsertUpdateAsync(source.System_EmailTypes);
 			await target.InsertUpdateAsync(source.System_MessageTypes);
-			await target.InsertUpdateAsync(source.System_OrderStatusEnums);
+			//await target.InsertUpdateAsync(source.System_OrderStatusEnums);
+			//No PK on OrderStatusEnums, standard process won't work
+			await target.BulkInsertAsync(source, source.System_OrderStatusEnums);
 			await target.InsertUpdateAsync(source.System_ProcessingStatuses);
 			await target.InsertUpdateAsync(source.System_TimeZones);
-			await target.InsertUpdateAsync(source.System_ZCTAs);
+			await target.InsertAsync(source.System_ZCTAs);
 			await target.InsertUpdateAsync(source.SystemEntityTypes);
 			await target.InsertUpdateAsync(source.Ticketing_TicketTypes);
 			await target.InsertUpdateAsync(source.TransactionTypes);
 
 
-			logger.LogInformation("Completed copying system tables");
+			Logger.LogInformation("Completed copying system tables");
 		}
 
 	}
