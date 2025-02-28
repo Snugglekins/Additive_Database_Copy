@@ -206,6 +206,7 @@ namespace Additive_DB_Refresh.Extensions
 			}
 			await target.Database.ExecuteSqlRawAsync(sql);
 		}
+
 		#endregion SQL Script based operations
 	}
 }

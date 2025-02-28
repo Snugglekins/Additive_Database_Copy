@@ -973,6 +973,10 @@
       {
          "Name": "[Ticketing].[TicketTypes]",
          "ObjectType": 0
+      },
+      {
+         "Name": "[refresh].[spui_LoginsAndRoles]",
+         "ObjectType": 1
       }
    ],
    "UiHint": null,

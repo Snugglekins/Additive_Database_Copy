@@ -1,13 +1,17 @@
 ﻿{
   "DbCopyConfigs": [
     {
-      "DestinationDatabase": "Additive_Refresh_Test",
-      "ClientLocationKeys": [8]
+      "ClientLocationKeys": [ 8 ],
+      "DestinationDatabase": "Additive_Refresh_Test_Copy",
+      "DestinationDatabaseResourceId": "/subscriptions/f3dc0d51-b5b5-4966-97c4-53fc375a6262/resourceGroups/Non-production/providers/Microsoft.Sql/servers/e2-us-nonproduction-sql01",
+      "Sku": "S0"
     }
   ],
   "DefaultValues": {
-    "CopyPartnerLocations": true,
+    "CopyPartnerLocations": false,
     "UsersList": "devqauserlist.json",
     "CopyLinkedOrders": true
-  }
+  },
+  "ModelDatabase": "Additive_Refresh_Test",
+  "ModelDatabaseServerResourceId": "/subscriptions/f3dc0d51-b5b5-4966-97c4-53fc375a6262/resourceGroups/Non-production/providers/Microsoft.Sql/servers/e2-us-nonproduction-sql01"
 }

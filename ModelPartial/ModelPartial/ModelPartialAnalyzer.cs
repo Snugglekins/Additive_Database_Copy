@@ -120,7 +120,7 @@ namespace ModelPartial
 				//	WriteFile($"OK : PartialModel Class {partialClassName} exists @ Filepath : {partialClassPath}");
 				//}
 			}
-			catch (Exception ex) {
+			catch  {
 				//WriteFile(ex.Message);
 				throw;
 			}

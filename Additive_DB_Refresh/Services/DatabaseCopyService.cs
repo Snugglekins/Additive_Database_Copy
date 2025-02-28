@@ -4,6 +4,7 @@ using Additive_DB_Refresh.Extensions;
 using Additive_DB_Refresh.Repositories;
 using Additive_DB_Refresh.Utilities;
 using Azure.ResourceManager;
+using Azure.ResourceManager.Sql;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Internal;
 using Microsoft.EntityFrameworkCore.Query;
@@ -21,35 +22,36 @@ namespace Additive_DB_Refresh.Services
 {
 	public class DatabaseCopyService : IDatabaseCopyService
 	{
-		private List<DbCopyConfig> dbConfigs { get; }
+		private List<DbCopyConfig> DbConfigs { get; }
 		private bool copyParnterLocations { get; }
 		private bool copyLinkedOrders { get; }
 		private string usersList { get; }
 
 		protected IHostApplicationLifetime appLifetime { get; set; }
-		private IConfiguration configuration { get; }
+		private IConfiguration Configuration { get; }
 		private CancellationTokenSource cts { get; set; }
 		int? exitCode;
-		ArmClient armClient { get; }
+		ArmClient ArmClient { get; }
 		private ILogger<DatabaseCopyService> Logger { get; }
-		private SourceContext source { get; }
-		private TargetContext target { get; }
+		private SourceContext Source { get; }
 		private DatabaseCopierFactory CopierFactory { get; }
 			
 		public DatabaseCopyService(IConfiguration _configuration
 								, ILogger<DatabaseCopyService> _logger
 								, IHostApplicationLifetime _appLifetime
 								, ArmClient _armClient, List<DbCopyConfig> _dbConfigs
-								, DatabaseCopierFactory databaseCopierFactory)
+								, DatabaseCopierFactory databaseCopierFactory
+								, SourceContext source)
 								
 		{
 			appLifetime = _appLifetime;
 			cts = new CancellationTokenSource();
-			configuration = _configuration;
+			Configuration = _configuration;
 			Logger = _logger;
-			armClient = _armClient;
-			dbConfigs = _dbConfigs;
+			ArmClient = _armClient;
+			DbConfigs = _dbConfigs;
 			CopierFactory = databaseCopierFactory;
+			Source = source;
 
 		}
 		public Task StartAsync(CancellationToken cancellationToken)
@@ -95,15 +97,36 @@ namespace Additive_DB_Refresh.Services
 		{
 			var starttime = DateTime.Now;
 			Logger.LogInformation($"Data transfer starting : {starttime}");
-			foreach (DbCopyConfig config in dbConfigs)
+			
+			//Validate database settings
+			if (!SettingsValid()) {
+				Logger.LogError("Database settings invalid. Please cehck and try again.");
+				return;
+			}
+
+			//Copy empty model database
+			List<DatabaseCopier> databaseCopiers = new List<DatabaseCopier>();
+
+			List<Task<ArmOperation<SqlDatabaseResource>>> creationTasks = new List<Task<ArmOperation<SqlDatabaseResource>>>();
+
+			foreach (DbCopyConfig config in DbConfigs) {
+				DatabaseCopier databaseCopier = await CopierFactory.CreateDatabaseCopier(config);
+				databaseCopiers.Add(databaseCopier);
+				creationTasks.Add(databaseCopier.CopyModelDatabase());
+
+			}
+
+			await Task.WhenAll(creationTasks);//Await all database copy processes to complete before proceeding
+
+			//Move data for each copy
+			foreach (DatabaseCopier databaseCopier in databaseCopiers)
 			{
-				//TODO : Create method to generate DB copies from an empty original, then use those as targets for the copy process
 
 				try
 				{
-					DatabaseCopier databaseCopier = await CopierFactory.CreateDatabaseCopier(config);
 					List<string> missingTables = await databaseCopier.GetAllMissingTablesAsync();
-					if (missingTables != null & missingTables.Count > 0)
+					
+					if (missingTables != null && missingTables.Count > 0)
 					{
 						foreach (string missingTable in missingTables)
 						{
@@ -113,6 +136,7 @@ namespace Additive_DB_Refresh.Services
 					else
 					{
 						await databaseCopier.CopyData(true);
+						await databaseCopier.AddApplicationUsersAsync();
 					}
 				}
 				catch (Exception e)
@@ -123,7 +147,7 @@ namespace Additive_DB_Refresh.Services
 				finally { 
 					var endtime = DateTime.Now;
 					TimeSpan ts = endtime - starttime;
-					Logger.LogInformation($"Process completed at {endtime}  ; runtime {ts}");
+					Logger.LogInformation("Process completed at {endtime}  ; runtime {ts}", endtime, ts);
 				}
 			}
 		}
@@ -131,6 +155,40 @@ namespace Additive_DB_Refresh.Services
 		{
 
 		}
+		private bool SettingsValid() {
+			bool valid = true;
 
+			if (!Source.Database.CanConnect()) { 
+				valid = false;
+				Logger.LogError("Unable to connect to source server");
+			}
+
+			string? modelDatabaseServerResourceId = Configuration.GetValue<string>("ModelDatabaseServerResourceId");
+			string? modelDatabase = Configuration.GetValue<string>("ModelDatabase");
+
+			if (modelDatabaseServerResourceId != null && modelDatabase != null)
+			{
+				SqlServerResource modelServerResource = ArmClient.GetSqlServerResource(new Azure.Core.ResourceIdentifier(modelDatabaseServerResourceId));
+				if (!DbManagement.DatabaseExists(modelServerResource, modelDatabase)) { 
+					valid = false;
+					Logger.LogError("Model Database {databaseName} not found.", modelDatabase);
+				}
+			}
+			else { 
+				valid = false;
+				Logger.LogError("Model Database settings ModelDatabase and/or ModelDatabaseServerResourceId not found");
+			}
+
+			foreach (DbCopyConfig dbConfig in DbConfigs) {
+				SqlServerResource destServerResourceId = ArmClient.GetSqlServerResource(new Azure.Core.ResourceIdentifier(dbConfig.DestinationDatabaseResourceId));
+				if (DbManagement.DatabaseExists(destServerResourceId, dbConfig.DestinationDatabase)) {
+					valid = false;
+					Logger.LogError("Destination database {databaseName} already exists. Please choose another name or delete the database and run again.", dbConfig.DestinationDatabase);
+				}
+
+			}
+			return valid;
+		}
+		
 	}
 }

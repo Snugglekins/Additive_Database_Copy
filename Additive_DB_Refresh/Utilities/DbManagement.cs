@@ -13,22 +13,23 @@ namespace Additive_DB_Refresh.Utilities
 {
 	public static class DbManagement
 	{
-		public static async Task CreateDatabase(SqlServerResource destServerResource, SqlDatabaseData newSqlDatabaseData, string newDatabaseName)
+		public static async Task<ArmOperation<SqlDatabaseResource>> CreateDatabase(SqlServerResource destServerResource, SqlDatabaseData newSqlDatabaseData, string newDatabaseName)
 		{
 
 			try
 			{
 				newSqlDatabaseData.CreateMode = SqlDatabaseCreateMode.Default;
 				SqlDatabaseCollection databaseCollection = destServerResource.GetSqlDatabases();
-				ArmOperation<SqlDatabaseResource> operation = await databaseCollection.CreateOrUpdateAsync(Azure.WaitUntil.Completed, newDatabaseName, newSqlDatabaseData);
+				return await databaseCollection.CreateOrUpdateAsync(Azure.WaitUntil.Completed, newDatabaseName, newSqlDatabaseData);
 			}
 			catch
 			{
 				throw;
 			}
 		}
-		public static async Task CopyDatabase(SqlServerResource sourceServerResource, string sourceDatabaseName, SqlServerResource destServerResource, string newDatabaseName, SqlDatabaseData newSqlDatabaseData)
+		public static async Task<ArmOperation<SqlDatabaseResource>> CopyDatabase(SqlServerResource sourceServerResource, string sourceDatabaseName, SqlServerResource destServerResource, string newDatabaseName, SqlDatabaseData newSqlDatabaseData)
 		{
+			
 			try
 			{
 
@@ -38,14 +39,13 @@ namespace Additive_DB_Refresh.Utilities
 				if (sourceDatabase == null) { throw new Exception($"Database {sourceDatabaseName} not found on server {sourceServerResource.Data.Name}"); }
 				newSqlDatabaseData.CreateMode = SqlDatabaseCreateMode.Copy;
 				newSqlDatabaseData.SourceDatabaseId = sourceDatabase.Id;
-				ArmOperation<SqlDatabaseResource> operation = await databaseCollection.CreateOrUpdateAsync(Azure.WaitUntil.Completed, newDatabaseName, newSqlDatabaseData);
-				
+				return await databaseCollection.CreateOrUpdateAsync(Azure.WaitUntil.Completed, newDatabaseName, newSqlDatabaseData);
 			}
 			catch
 			{
 				throw;
 			}
-			return;
+			
 		}
 		public static SqlDatabaseResource? GetDatabase(SqlServerResource server, string databaseName)
 		{
@@ -66,14 +66,11 @@ namespace Additive_DB_Refresh.Utilities
 			try
 			{
 				
-					
 					SqlSku sku = new SqlSku(sku_name);
 					SqlDatabasePatch patch = new SqlDatabasePatch();
 					patch.Sku = sku;
 					patch.SourceDatabaseId = database.Id;
 					await database.UpdateAsync(Azure.WaitUntil.Completed, patch);
-
-
 			}
 			catch 
 			{

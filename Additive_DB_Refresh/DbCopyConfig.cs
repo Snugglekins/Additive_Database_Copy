@@ -13,6 +13,8 @@ namespace Additive_DB_Refresh
 		public bool? CopyPartnerLocations { get; set; }
 		public string? UsersList { get; set; }
 		public bool? CopyLinkedOrders { get; set; }
+		public string Sku { get; set; } = String.Empty;
+		public string DestinationDatabaseResourceId { get; set; } = String.Empty;
 
 	}
 }
