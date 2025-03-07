@@ -13,23 +13,23 @@ namespace Additive_DB_Refresh.DataStreams
 {
 	public class ClientStream : IDisposable
 	{
-		private SourceContext source;
-		private TargetContext target;
+		private SourceContext Source;
+		private TargetContext Target;
 		private ILogger<ClientStream> Logger;
-		public ClientStream(SourceContext _source, TargetContext _target, ILogger<ClientStream> logger) {
-			source = _source;
-			target = _target;
+		public ClientStream(SourceContext source, TargetContext target, ILogger<ClientStream> logger) {
+			Source = source;
+			Target = target;
 			Logger = logger;
-			source.Database.SetCommandTimeout(0);
-			target.Database.SetCommandTimeout(0);
+			Source.Database.SetCommandTimeout(0);
+			Target.Database.SetCommandTimeout(0);
 		}
 		public async Task CopyClientAsync(int clientKey) {
 			try
 			{
 				Logger.LogInformation($"Copying client {clientKey}");
-				await Migrator<Client>.MigrateDataInsertUpdateAsync(GetClientIQueryable(source, clientKey), target);
-				await Migrator<ClientLogin>.MigrateDataInsertUpdateAsync(GetClientLoginsIQueryable(source, clientKey), target);
-				await Migrator<ClientEmployee>.MigrateDataInsertUpdateAsync(GetClientEmployeesIQueryable(source, clientKey), target);
+				await Migrator<Client>.MigrateDataInsertUpdateAsync(GetClientIQueryable(Source, clientKey), Target);
+				await Migrator<ClientLogin>.MigrateDataInsertUpdateAsync(GetClientLoginsIQueryable(Source, clientKey), Target);
+				await Migrator<ClientEmployee>.MigrateDataInsertUpdateAsync(GetClientEmployeesIQueryable(Source, clientKey), Target);
 				Logger.LogInformation($"Finished copying client {clientKey}");
 			}
 			catch (Exception ex) {
@@ -52,8 +52,8 @@ namespace Additive_DB_Refresh.DataStreams
 		#endregion Client Queryables
 		public void Dispose()
 		{
-			source.Dispose();
-			target.Dispose();
+			Source.Dispose();
+			Target.Dispose();
 		}
 	}
 }

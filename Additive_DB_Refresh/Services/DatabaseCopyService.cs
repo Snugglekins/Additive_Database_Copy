@@ -23,10 +23,6 @@ namespace Additive_DB_Refresh.Services
 	public class DatabaseCopyService : IDatabaseCopyService
 	{
 		private List<DbCopyConfig> DbConfigs { get; }
-		private bool copyParnterLocations { get; }
-		private bool copyLinkedOrders { get; }
-		private string usersList { get; }
-
 		protected IHostApplicationLifetime appLifetime { get; set; }
 		private IConfiguration Configuration { get; }
 		private CancellationTokenSource cts { get; set; }
@@ -37,9 +33,9 @@ namespace Additive_DB_Refresh.Services
 		private DatabaseCopierFactory CopierFactory { get; }
 			
 		public DatabaseCopyService(IConfiguration _configuration
-								, ILogger<DatabaseCopyService> _logger
+								, ILogger<DatabaseCopyService> logger
 								, IHostApplicationLifetime _appLifetime
-								, ArmClient _armClient, List<DbCopyConfig> _dbConfigs
+								, ArmClient armClient, List<DbCopyConfig> dbConfigs
 								, DatabaseCopierFactory databaseCopierFactory
 								, SourceContext source)
 								
@@ -47,9 +43,9 @@ namespace Additive_DB_Refresh.Services
 			appLifetime = _appLifetime;
 			cts = new CancellationTokenSource();
 			Configuration = _configuration;
-			Logger = _logger;
-			ArmClient = _armClient;
-			DbConfigs = _dbConfigs;
+			Logger = logger;
+			ArmClient = armClient;
+			DbConfigs = dbConfigs;
 			CopierFactory = databaseCopierFactory;
 			Source = source;
 
@@ -71,7 +67,8 @@ namespace Additive_DB_Refresh.Services
 				catch (Exception ex)
 				{
 					exitCode = 1;
-					Logger.LogError($"Unhandled exception during DatabaseCopyService : {ex.Message}");
+					Logger.LogError($"Unhandled exception during DatabaseCopyService: {ex.Message}");
+					throw;
 				}
 				finally
 				{

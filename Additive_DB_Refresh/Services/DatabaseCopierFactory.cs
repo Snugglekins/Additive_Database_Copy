@@ -29,11 +29,11 @@ namespace Additive_DB_Refresh.Services
 		}
 		public async Task<DatabaseCopier> CreateDatabaseCopier(DbCopyConfig copyConfig) {
 			string targetdatabase = copyConfig.DestinationDatabase;
-			TargetContext target = await TargetFactory.CreateDbContextAsync(targetdatabase);
-			SystemTablesStream systemTablesStream = new SystemTablesStream(SourceFactory.CreateDbContext(), await TargetFactory.CreateDbContextAsync(targetdatabase),LoggerFactory.CreateLogger<SystemTablesStream>());
-			ClientStream clientStream = new ClientStream(SourceFactory.CreateDbContext(), await TargetFactory.CreateDbContextAsync(targetdatabase), LoggerFactory.CreateLogger<ClientStream>());
+			TargetContext target = await TargetFactory.CreateDbContextNoTimeoutAsync(targetdatabase);
+			SystemTablesStream systemTablesStream = new SystemTablesStream(SourceFactory.CreateDbContext(), await TargetFactory.CreateDbContextNoTimeoutAsync(targetdatabase),LoggerFactory.CreateLogger<SystemTablesStream>());
+			ClientStream clientStream = new ClientStream(SourceFactory.CreateDbContext(), await TargetFactory.CreateDbContextNoTimeoutAsync(targetdatabase), LoggerFactory.CreateLogger<ClientStream>());
 			ClientLocationStream clientLocationStream = new ClientLocationStream(SourceFactory, TargetFactory, LoggerFactory.CreateLogger<ClientLocationStream>(), targetdatabase);
-			DatabaseCopier databaseCopier = new DatabaseCopier(Configuration,systemTablesStream,clientStream,clientLocationStream,LoggerFactory.CreateLogger<DatabaseCopier>(), await TargetFactory.CreateDbContextAsync(targetdatabase), SourceFactory.CreateDbContext(), copyConfig, ArmClient);
+			DatabaseCopier databaseCopier = new DatabaseCopier(Configuration,systemTablesStream,clientStream,clientLocationStream,LoggerFactory.CreateLogger<DatabaseCopier>(), await TargetFactory.CreateDbContextNoTimeoutAsync(targetdatabase), SourceFactory.CreateDbContext(), copyConfig, ArmClient);
 			return databaseCopier;
 		}
 

@@ -5,6 +5,7 @@ using Additive_DB_Refresh.Repositories;
 using Additive_DB_Refresh.Utilities;
 using Azure.ResourceManager;
 using Azure.ResourceManager.Sql;
+using Azure.ResourceManager.Sql.Models;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -28,12 +29,15 @@ namespace Additive_DB_Refresh.Services
 		private SourceContext Source { get; }
 		private TargetContext Target { get; }
 		private List<int> ClientLocationKeys { get; set; } = new List<int>();
-		private string ModelDatabaseServerResourceId { get; set; } = String.Empty;
+		//private string ModelDatabaseServerResourceId { get; set; } = String.Empty;
 		private string ModelDatabase { get; set; } = String.Empty;
-		
+		private SqlServerResource ModelServerResource { get; }
+		private SqlServerResource TargetServerResource { get; }
+
 		private bool CopyPartnerLocations = false;
 		private DbCopyConfig CopyConfig { get; set; }
 		private ArmClient ArmClient { get; set; }
+		SqlDatabaseResource? TargetDbResource { get; set; }
 		public DatabaseCopier(IConfiguration configuration,SystemTablesStream systemTablesStream,ClientStream clientStream, ClientLocationStream clientLocationStream, ILogger<DatabaseCopier> logger, TargetContext target,SourceContext source, DbCopyConfig copyConfig, ArmClient armClient) {
 			SystemTablesStream = systemTablesStream;
 			ClientStream = clientStream;
@@ -45,7 +49,9 @@ namespace Additive_DB_Refresh.Services
 			Configuration = configuration;
 			CopyPartnerLocations = configuration.GetValue<bool>("DefaultValues:CopyPartnerLocations");
 			ModelDatabase = configuration.GetValue<string>("ModelDatabase");
-			ModelDatabaseServerResourceId = configuration.GetValue<string>("ModelDatabaseServerResourceId");
+			ModelServerResource = ArmClient.GetSqlServerResource(new Azure.Core.ResourceIdentifier(configuration.GetValue<string>("ModelDatabaseServerResourceId")));
+			TargetServerResource = ArmClient.GetSqlServerResource(new Azure.Core.ResourceIdentifier(CopyConfig.DestinationDatabaseResourceId));
+			//ModelDatabaseServerResourceId = configuration.GetValue<string>("ModelDatabaseServerResourceId");
 			ArmClient = armClient;
 		}
 		public async Task CopyData(bool clearTables) {
@@ -68,11 +74,14 @@ namespace Additive_DB_Refresh.Services
 					var otherClientLocations = ClientLocationKeys.Except(new List<int> { clientLocationKey }).ToList();
 					await CopyClientLocationAsync(clientLocationKey,otherClientLocations);
 				}
+
+				UpdateStatus("Completed");
 			}
 			catch (Exception ex)
 			{
 				Logger.LogError("CopyData failed");
 				Logger.LogError(ex.ToString());
+				UpdateStatus("Error during copy process");
 				throw;
 			}
 			finally
@@ -83,13 +92,14 @@ namespace Additive_DB_Refresh.Services
 		private async Task CopyClientLocationAsync(int clientLocationKey,List<int> otherClientLocationKeys) {
 
 			try {
+				UpdateStatus($"Copying client location {clientLocationKey} setup.");
 				int clientKey = Source.ClientLocations.Where(cl => cl.ClientLocationKey == clientLocationKey).First().ClientKey;
 
-				if (Target.Clients.Where(c => c.ClientKey == clientKey).Count() == 0)
+				if (!Target.Clients.Where(c => c.ClientKey == clientKey).Any())
 				{
 					await ClientStream.CopyClientAsync(clientKey);
 				}
-				if (Target.ClientLocations.Where(cl => cl.ClientLocationKey == clientLocationKey).Count() == 0)
+				if (!Target.ClientLocations.Where(cl => cl.ClientLocationKey == clientLocationKey).Any())
 				{
 					await ClientLocationStream.CopyClientLocationAsync(clientLocationKey,CopyPartnerLocations,otherClientLocationKeys);
 				}
@@ -100,8 +110,10 @@ namespace Additive_DB_Refresh.Services
 			}
 		}
 		private async Task PrepareForImportAsync(bool clearTables) {
+
 			try
 			{
+				UpdateStatus("Preparing for import");
 				Logger.LogInformation("Turning off triggers and foreign keys");
 				await Target.DropForeignKeysAsync();
 				await Target.DisableTriggersAsync();
@@ -119,6 +131,7 @@ namespace Additive_DB_Refresh.Services
 		private async Task PostImportCleanupAsync() {
 			try
 			{
+				UpdateStatus("Post import cleanup");
 				await Target.AddForeignKeysAsync();
 				await Target.EnableTriggersAsync();
 			}
@@ -143,7 +156,7 @@ namespace Additive_DB_Refresh.Services
 		}
 		private async Task<List<int>> GetCrossSellPartners(List<int> clientLocationKeys)
 		{
-			List<int> clientLocationKeysOther = new List<int>();
+			List<int> clientLocationKeysOther = [];
 
 			foreach (int clientLocationKey in clientLocationKeys)
 			{
@@ -181,12 +194,36 @@ namespace Additive_DB_Refresh.Services
 			}
 		}
 		public async Task<ArmOperation<SqlDatabaseResource>> CopyModelDatabase() {
-			SqlServerResource ModelServerResource = ArmClient.GetSqlServerResource(new Azure.Core.ResourceIdentifier(ModelDatabaseServerResourceId));
-			SqlServerResource DestServerResource = ArmClient.GetSqlServerResource(new Azure.Core.ResourceIdentifier(CopyConfig.DestinationDatabaseResourceId));
-			var res = DestServerResource.Get().Value;
-			SqlDatabaseData sqlDatabaseData = new SqlDatabaseData(res.Data.Location);
-			return await DbManagement.CopyDatabase(ModelServerResource,ModelDatabase,DestServerResource,CopyConfig.DestinationDatabase,sqlDatabaseData);
+			//SqlServerResource ModelServerResource = ArmClient.GetSqlServerResource(new Azure.Core.ResourceIdentifier(ModelDatabaseServerResourceId));
+			
+			var res = TargetServerResource.Get().Value;
+			
+			SqlDatabaseData sqlDatabaseData = new(res.Data.Location)
+			{
+				Sku = new SqlSku(CopyConfig.Sku),
+			};
+			//Set DB tags
+			sqlDatabaseData.Tags.Add("Copy started (UTC)", DateTime.UtcNow.ToString("MM-dd-yyyy HH:mm"));
+			sqlDatabaseData.Tags.Add("Client Locations targeted", string.Join(",",CopyConfig.ClientLocationKeys));
+			sqlDatabaseData.Tags.Add("Copy unlisted Partner Locations", CopyConfig.CopyPartnerLocations.ToString());
+			sqlDatabaseData.Tags.Add("Copy linked Orders", CopyConfig.CopyLinkedOrders == null ? "False": CopyConfig.CopyLinkedOrders.ToString());
+			sqlDatabaseData.Tags.Add("Status", "Copying from Model database");
+			return await DbManagement.CopyDatabase(ModelServerResource,ModelDatabase,TargetServerResource,CopyConfig.DestinationDatabase,sqlDatabaseData);
 		}
+		public void AddUpdateTag(string key, string value)
+		{
+			SetTargetDbResource();
+			TargetDbResource?.Data.Tags.Add(key, value);
+		}
+		public void UpdateStatus(string value) {
+			SetTargetDbResource();
+			TargetDbResource?.Data.Tags.Add("Status", value);
+		}
+		public void SetTargetDbResource() {
+			TargetDbResource ??= DbManagement.GetDatabase(TargetServerResource, CopyConfig.DestinationDatabase);
+		}
+
+		
 	}
 }
 

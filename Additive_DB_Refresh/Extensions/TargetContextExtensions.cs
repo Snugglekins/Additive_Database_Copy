@@ -23,18 +23,17 @@ namespace Additive_DB_Refresh.Extensions
 	{
 		public static bool HasIdentity<T>(this TargetContext context) where T : class
 		{
-			var set = context.Set<T>();
-			foreach (var key in context.Model.FindEntityType(typeof(T)).GetKeys())
-			{
-				foreach (var property in key.Properties)
+				var set = context.Set<T>();
+				foreach (var key in context.Model.FindEntityType(typeof(T)).GetKeys())
 				{
-					if (property.ValueGenerated == Microsoft.EntityFrameworkCore.Metadata.ValueGenerated.OnAdd)
+					foreach (var property in key.Properties)
 					{
-						return true;
+						if (property.ValueGenerated == Microsoft.EntityFrameworkCore.Metadata.ValueGenerated.OnAdd)
+						{
+							return true;
+						}
 					}
 				}
-			}
-
 			return false;
 		}
 		public static IProperty? GetIdentityColumn<T>(this TargetContext context) where T : class
@@ -63,14 +62,11 @@ namespace Additive_DB_Refresh.Extensions
 			
 			if (context.HasIdentity<T>())
 			{
-				using (var transaction = await context.Database.BeginTransactionAsync())
-				{
-					await context.Database.ExecuteSqlRawAsync($"SET IDENTITY_INSERT {context.GetTableName<T>()} ON");
-					await context.SaveChangesAsync();
-					await context.Database.ExecuteSqlRawAsync($"SET IDENTITY_INSERT {context.GetTableName<T>()} OFF");
-					await transaction.CommitAsync();
-
-				}
+				using var transaction = await context.Database.BeginTransactionAsync();
+				await context.Database.ExecuteSqlRawAsync($"SET IDENTITY_INSERT {context.GetTableName<T>()} ON");
+				await context.SaveChangesAsync();
+				await context.Database.ExecuteSqlRawAsync($"SET IDENTITY_INSERT {context.GetTableName<T>()} OFF");
+				await transaction.CommitAsync();
 			}
 			else
 			{
@@ -130,7 +126,7 @@ namespace Additive_DB_Refresh.Extensions
 		public async static Task<List<string>> GetAllMissingTableNamesAsync(this TargetContext target) { 
 			List<string> dbTables =  await target.Database.SqlQueryRaw<string>("SELECT '['+ t.TABLE_SCHEMA +'].['+ t.TABLE_NAME +']' AS UserTables FROM INFORMATION_SCHEMA.TABLES AS t WHERE t.TABLE_TYPE LIKE 'BASE TABLE'").ToListAsync();
 			List<string> modelTables = target.GetAllTableNames();
-			List<string> missingTables = new List<string>();
+			List<string> missingTables = [];
 			foreach (var modelTable in modelTables) {
 				if (!dbTables.Any(t => t.Equals(modelTable))) 
 				{

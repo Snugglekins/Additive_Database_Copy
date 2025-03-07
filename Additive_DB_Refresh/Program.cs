@@ -54,8 +54,16 @@ var logger = loggerFactory.CreateLogger<Program>();
 logger.LogInformation("Configuring process");
 
 List<DbCopyConfig> dbCopyConfigs = config.GetSection("DbCopyConfigs").Get<List<DbCopyConfig>>();
-
-ArmClient armClient = new ArmClient(new DefaultAzureCredential());
+var credentialOptions = new DefaultAzureCredentialOptions() { 
+								//ExcludeVisualStudioCodeCredential = true
+								//,ExcludeWorkloadIdentityCredential = true
+								//,ExcludeManagedIdentityCredential = true
+								//,ExcludeEnvironmentCredential = true
+								//,ExcludeAzureDeveloperCliCredential = true
+								//,ExcludeInteractiveBrowserCredential = true
+								TenantId= "705a061c-4337-41ef-aeef-58805e36b1cc"
+};
+ArmClient armClient = new ArmClient(new DefaultAzureCredential(credentialOptions));
 
 logger.LogInformation(armClient.ToString());
 

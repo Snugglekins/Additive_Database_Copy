@@ -19,16 +19,34 @@ namespace Additive_DB_Refresh.Extensions
 			context.Database.SetCommandTimeout(0);
 			return context;
 		}
+		public static SourceContext CreateDbContextNoTimeout(this IDbContextFactory<SourceContext> factory)
+		{
+			var context = factory.CreateDbContext();
+			context.Database.SetCommandTimeout(0);
+			return context;
+		}
 		public async static Task<TargetContext> CreateDbContextNoTimeoutAsync(this IDbContextFactory<TargetContext> factory)
 		{
 			var context = await factory.CreateDbContextAsync();
 			context.Database.SetCommandTimeout(0);
 			return context;
 		}
-		public static async Task<TargetContext> CreateDbContextAsync(this IDbContextFactory<TargetContext> factory, string databaseName) {
+		public static async Task<TargetContext> CreateDbContextNoTimeoutAsync(this IDbContextFactory<TargetContext> factory, string databaseName) {
 			var context = await factory.CreateDbContextAsync();
-			var csBuilder = new SqlConnectionStringBuilder(connectionString: context.Database.GetConnectionString());
-			csBuilder.InitialCatalog = databaseName;
+			var csBuilder = new SqlConnectionStringBuilder(connectionString: context.Database.GetConnectionString())
+			{
+				InitialCatalog = databaseName
+			};
+			context.Database.SetConnectionString(csBuilder.ToString());
+			context.Database.SetCommandTimeout(0);
+			return context;
+		}
+		public static TargetContext CreateDbContextNoTimeout(this IDbContextFactory<TargetContext> factory, string databaseName) {
+			var context = factory.CreateDbContext();
+			var csBuilder = new SqlConnectionStringBuilder(connectionString: context.Database.GetConnectionString())
+			{
+				InitialCatalog = databaseName
+			};
 			context.Database.SetConnectionString(csBuilder.ToString());
 			context.Database.SetCommandTimeout(0);
 			return context;
